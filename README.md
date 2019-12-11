@@ -38,7 +38,7 @@ Automatic deployment of `Ceph cluster` via ansible script.
 ```shell
 export CEPH_INSTALL_DIR="/opt"
 cd $CEPH_INSTALL_DIR
-git clone https://github.com/linux123zc/ceph-deploy.git
+git clone https://github.com/cloudclusters/ceph-deploy.git
 ```
 2.&nbsp;Install ansible, configure secret-key free login to other nodes on master1.
 ```shell
