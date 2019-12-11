@@ -14,7 +14,7 @@ Automatic deployment of `Ceph cluster` via ansible script.
 
 ## Environment
 
-| hostname |IP |Nic |Disk |OS |
+| hostname |IP |NIC |Disk |OS |
 | ------ | ------ |--- |------ |------ |
 | master1 | 192.168.10.148 / 172.16.0.148 |ens7 |/dev/vda |Ubuntu18.04 |
 | master2 | 192.168.10.149 / 172.16.0.149 |ens7 |/dev/vda |Ubuntu18.04 |
