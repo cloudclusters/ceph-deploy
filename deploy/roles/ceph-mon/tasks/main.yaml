@@ -1,0 +1,10 @@
+- name: Configure the initial monitors and collect all keys
+  shell: ceph-deploy --overwrite-conf mon create-initial
+  args:
+    chdir: "{{workdir}}"
+
+- name: Copy admin.keyring to all node
+  shell: ceph-deploy admin {{all_node}}
+  args:
+    chdir: "{{workdir}}"
+

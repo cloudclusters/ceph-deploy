@@ -1,0 +1,26 @@
+- name: Create mds
+  shell: ceph-deploy --overwrite-conf mds create {{master}}
+  args:
+    chdir: "{{workdir}}"
+
+- name: Enable ceph-mds
+  shell: systemctl enable ceph-mds@{{item}}
+  with_items:
+    - "{{master_list}}"
+
+- name: Start ceph-mds
+  shell: systemctl start ceph-mds@{{item}}
+  with_items:
+    - "{{master_list}}"
+
+- name: Enable ceph.target
+  shell: systemctl enable ceph.target      
+
+- name: Create pool named "fs_data"
+  shell: ceph osd pool create {{fs_data}} {{fs_data_pg}}
+
+- name: Create pool named "fs_metadata"
+  shell: ceph osd pool create {{fs_metadata}} {{fs_metadata_pg}}
+
+- name: Create cephfs named "filesystem"
+  shell: ceph fs new {{cephfs}} {{fs_metadata}} {{fs_data}}

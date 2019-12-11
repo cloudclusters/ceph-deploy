@@ -1,0 +1,29 @@
+- name: Add release key
+  shell: wget -q -O- 'https://download.ceph.com/keys/release.asc' | sudo apt-key add -
+
+- name: Add Ceph APT repository
+  shell: echo deb https://download.ceph.com/debian-mimic/ $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/ceph.list
+
+- name: Update repository and install ceph-deply
+  apt: name=ceph-deploy update-cache=yes
+
+- name: Create work directory
+  file:
+    path: "{{workdir}}"
+    state: directory
+
+- name: Create Cluster
+  shell: ceph-deploy new  {{master}}
+  args:
+    chdir: "{{workdir}}"
+  
+- name: Install Ceph
+  shell: ceph-deploy install {{all_node}}
+  args:
+    chdir: "{{workdir}}"
+
+- name: Add IP Configuration
+  shell: echo 'public network = {{public_network}} \ncluster network = {{cluster_network}}' >>{{workdir}}/ceph.conf
+
+- name: Modify osd pool default size
+  shell: echo "osd pool default size = {{osd_pool_default_size}}" >>{{workdir}}/ceph.conf

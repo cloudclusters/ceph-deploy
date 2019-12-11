@@ -1,0 +1,14 @@
+- name: Stop osd service
+  shell: systemctl stop ceph-osd@{{remove_osd_id}}
+
+- name: Kick out osd
+  shell: ceph osd out osd.{{remove_osd_id}}
+
+- name: Remove OSD from curshmap
+  shell: ceph osd crush rm osd.{{remove_osd_id}}
+
+- name: Del osd auth
+  shell: ceph auth del osd.{{remove_osd_id}}
+
+- name: Remove OSD
+  shell: ceph osd rm osd.{{remove_osd_id}}

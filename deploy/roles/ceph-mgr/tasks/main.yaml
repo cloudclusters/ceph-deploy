@@ -1,0 +1,6 @@
+- name: Install Ceph dashboard
+  shell: ceph-deploy --overwrite-conf mgr create {{master}}
+  ignore_errors: True
+  args:
+    chdir: "{{workdir}}"
+

@@ -1,0 +1,24 @@
+- hosts:
+  - master
+  roles:
+    - modify-hosts
+    - initial-config
+
+- hosts:
+  - admin
+  roles:
+    - ceph-install
+    - ceph-mon
+    - ceph-mgr
+
+- hosts: 
+  - master
+  roles:
+    - ceph-dashboard      
+    
+- hosts:    
+  - admin
+  roles:
+    - ceph-osd
+    - ceph-mds
+    - ceph-rbd

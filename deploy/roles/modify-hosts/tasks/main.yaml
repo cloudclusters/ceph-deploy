@@ -1,0 +1,11 @@
+- name: judge a file is exists
+  shell: ls /etc/hosts
+  ignore_errors: True
+  register: result
+
+- name: Backup hosts
+  shell: mv /etc/hosts /etc/hosts_bak
+  when: result|succeeded
+
+- name: Copy configfile to master
+  template: src=hosts.j2 dest=/etc/hosts

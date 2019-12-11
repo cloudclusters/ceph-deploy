@@ -1,0 +1,4 @@
+- hosts:
+  - admin
+  roles:
+    - ceph-mds

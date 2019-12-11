@@ -1,0 +1,82 @@
+# Management node
+[admin]
+master1
+
+[master]
+# Masters node. ceph-mgr, ceph-mon, ceph-mds is installed on the master node
+# "host_ip" is the public IP address of the host
+192.168.10.148 host_name=master1 host_ip=x.x.x.x dashboard_port=8080
+192.168.10.149 host_name=master2 host_ip=x.x.x.x dashboard_port=8080
+192.168.10.151 host_name=master3 host_ip=x.x.x.x dashboard_port=8080
+
+[node]
+# ceph-osd is installed on the node
+192.168.10.152 host_name=node1 
+192.168.10.153 host_name=node2
+192.168.10.155 host_name=node3
+
+[add_node]
+192.168.10.156 host_name=node4
+
+# No need to fill anything under [remove_node].
+[remove_node]
+
+[all:vars]
+# There is no need to modify the value from the "master_info" variable to the "all_node" variable
+master_info="{% for h in groups['master'] %}{{h}}  {{hostvars[h]['host_name']}}\n{% endfor %}"
+node_info="{% for h in groups['node'] %}{{h}}  {{hostvars[h]['host_name']}}\n{% endfor %}"
+add_node_info="{% for h in groups['add_node'] %}{{h}}  {{hostvars[h]['host_name']}}\n{% endfor %}"
+
+master="{% for h in groups['master'] %}{{hostvars[h]['host_name']}} {% endfor %}"
+master_tmp="{% for h in groups['master'] %}\"{{hostvars[h]['host_name']}}\",{% endfor %}"
+master_list="[{{master_tmp.rstrip(',')}}]"
+
+# OSD node. ceph-osd is installed on the node
+node="{% for h in groups['node'] %}{{hostvars[h]['host_name']}} {% endfor %}"
+node_tmp="{% for h in groups['node'] %}\"{{hostvars[h]['host_name']}}\",{% endfor %}"
+osd_node_list="[{{node_tmp.rstrip(',')}}]"
+
+add_node="{% for h in groups['add_node'] %}{{hostvars[h]['host_name']}} {% endfor %}"
+add_node_tmp="{% for h in groups['add_node'] %}\"{{hostvars[h]['host_name']}}\",{% endfor %}"
+add_osd_node_list="[{{add_node_tmp.rstrip(',')}}]"
+
+# All nodes
+all_node="{{master}}{{node}}"
+
+# Ceph configuration file directory
+workdir="/root/ceph-cluster"
+
+# Ceph cluster multi-network configuration
+public_network="192.168.10.0/24"
+cluster_network='172.16.0.0/24'
+
+# Ceph osd replicated size 
+osd_pool_default_size=2
+
+# Ceph dashboard username and password
+dashboard_username="admin"
+dashboard_password="123456"
+
+# OSD devices list
+osd_partition_list=['/dev/vdb','/dev/vdc','/dev/vdd']
+
+# CEPHFS name
+cephfs="cephfs"
+
+# fs_data pool name
+fs_data="cephfs_data"
+fs_data_pg=256
+
+# fs_metadata pool name
+fs_metadata="cephfs_metadata"
+fs_metadata_pg=32
+
+# RBD pool name
+rbd_pool="rbd"
+rbd_pool_pg=256
+
+# Add node devices
+add_osd_partition_list=['/dev/vdb','/dev/vdc','/dev/vdd']
+
+# Remove osd by id 
+remove_osd_id=11

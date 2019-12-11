@@ -1,0 +1,26 @@
+- name: Enable ceph-mgr service
+  shell: systemctl enable ceph-mgr@{{host_name}}
+
+- name: Start ceph-mgr service
+  shell: systemctl start ceph-mgr@{{host_name}}
+
+- name: Enable ceph.target
+  shell: systemctl enable ceph.target
+
+- name: Enable mgr dashboard
+  shell: ceph mgr module enable dashboard
+
+- name: Create self-signed-cert
+  shell: ceph dashboard create-self-signed-cert
+
+- name: Dashboard config IP
+  shell: ceph config set mgr mgr/dashboard/{{host_name}}/server_addr {{host_ip}}
+  
+- name: Dashboard config listen port
+  shell: ceph config set mgr mgr/dashboard/{{host_name}}/server_port {{dashboard_port}}
+
+- name: Ceph config credentials
+  shell: ceph dashboard set-login-credentials {{dashboard_username}} {{dashboard_password}}
+
+- name: Restart ceph-mgr service
+  shell: systemctl restart ceph-mgr@{{host_name}}

@@ -1,0 +1,5 @@
+- name: Create os pool
+  shell: ceph osd pool create {{rbd_pool}} {{rbd_pool_pg}}
+
+- name: RBD pool init
+  shell: rbd pool init

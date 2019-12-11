@@ -1,0 +1,4 @@
+- hosts:
+  - remove_node
+  roles:
+    - remove-osd

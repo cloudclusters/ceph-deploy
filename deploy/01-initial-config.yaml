@@ -1,0 +1,7 @@
+- hosts:
+  - master
+  roles:
+    - modify-hosts
+    - initial-config
+
+    

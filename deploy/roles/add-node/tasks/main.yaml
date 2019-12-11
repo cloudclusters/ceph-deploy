@@ -1,0 +1,20 @@
+- name: Add host and ip info to /etc/hosts
+  shell: echo "{{add_node_info}}" >>/etc/hosts
+
+- name: Install ceph
+  shell: ceph-deploy install {{add_node}}
+  args:
+    chdir: "{{workdir}}"
+
+- name: Create OSD
+  shell: ceph-deploy --overwrite-conf osd create --data {{item[1]}} {{item[0]}}
+  with_nested:
+    - "{{add_osd_node_list}}"
+    - "{{add_osd_partition_list}}"
+  args:
+    chdir: "{{workdir}}"
+
+- name: Copy admin.keyring to all node
+  shell: ceph-deploy admin {{add_node}}
+  args:
+    chdir: "{{workdir}}"

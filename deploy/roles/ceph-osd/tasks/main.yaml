@@ -1,0 +1,22 @@
+#- name: List osd
+#  shell: ceph-deploy disk list {{node}}
+#  register: info
+#  args:
+#    chdir: "{{workdir}}"
+#
+#- name: print info
+#  debug: msg="{{info['stderr_lines']}}"
+
+#- name: debug loops
+#  debug: msg= "name --> {{ item[1] }}  values --> {{ item[0] }} "
+#  with_nested:
+#    - "{{osd_node_list}}"
+#    - "{{osd_partition_list}}"
+
+- name: Create OSD
+  shell: ceph-deploy osd create --data {{item[1]}} {{item[0]}}
+  with_nested:
+    - "{{osd_node_list}}"
+    - "{{osd_partition_list}}"
+  args:
+    chdir: "{{workdir}}"
