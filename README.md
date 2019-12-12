@@ -367,7 +367,7 @@ ceph osd setcrushmap  -i  newcrushmap
 
 ## Add Node 
 
-Add node4 to CEPH cluster.
+The following illustrate how to join one additional storage servers, node4, to this ceph cluster.
 
 1.&nbsp;Edit ceph inventory hosts file. 
 ```shell
@@ -375,7 +375,7 @@ cd $CEPH_INSTALL_DIR/ceph-deploy/deploy/
 vim hosts
 ```
 
-2.&nbsp;Modify the "[nodes]" field, add a new node4; modify the osd device.
+2.&nbsp;Under [add_node] section, add a new node4 with its partition list.
 ```yaml
 [add_node]
 192.168.10.156 host_name=node4
@@ -383,7 +383,7 @@ vim hosts
 add_osd_partition_list=['/dev/vdb','/dev/vdc','/dev/vdd']
 ```
 
-3.&nbsp;Execute add_node.yaml on master1.
+3.&nbsp;Run playbook add_node.yaml on master1 server.
 ```shell
 ansible-playbook add_node.yaml
 ```
@@ -399,7 +399,7 @@ cd $CEPH_INSTALL_DIR/ceph-deploy/deploy/
 vim hosts
 ```
 
-2.&nbsp;Modify the value of the variable "remove_osd_id" (Remove only one osd at a time).
+2.&nbsp;Specify the OSD you want to remove in following format(it’s good to just remove one OSD each time)
 ```yaml
 remove_osd_id=11
 ```
