@@ -9,12 +9,12 @@ Ceph-deploy
 
 ----   
 
-Automatic deployment of `Ceph cluster` via ansible script. 
+Ansible playbook for `ceph` deployment.
 &nbsp;
 
-## Environment
+## Hosts
 
-| hostname |IP |NIC |Disk |OS |
+| hostname |IP Address |NIC |Disk |OS |
 | ------ | ------ |--- |------ |------ |
 | master1 | 192.168.10.148 / 172.16.0.148 |ens7 |/dev/vda |Ubuntu18.04 |
 | master2 | 192.168.10.149 / 172.16.0.149 |ens7 |/dev/vda |Ubuntu18.04 |
@@ -34,18 +34,18 @@ Automatic deployment of `Ceph cluster` via ansible script.
 
 ## Installation
 
-1.&nbsp;Log in to master1 and download the deployment file.
+1.&nbsp;Log in to master1 and download this playbook.
 ```shell
 export CEPH_INSTALL_DIR="/opt"
 cd $CEPH_INSTALL_DIR
 git clone https://github.com/cloudclusters/ceph-deploy.git
 ```
-2.&nbsp;Install ansible, configure secret-key free login to other nodes on master1.
+2.&nbsp;Install ansible on "master1" and enable passwordless SSH on other servers.
 ```shell
 apt-get install ansible -y
 ```
 
-3.&nbsp;Modify ansible config file.
+3.&nbsp;Change "inventory_path" and "roles_path" to their current location, in Ansible configuration file.
 ```shell
 cd $CEPH_INSTALL_DIR/ceph-deploy/deploy
 sed -i "s#^inventory.*#inventory = $CEPH_INSTALL_DIR/ceph-deploy/deploy/hosts #g" ansible.cfg
@@ -58,14 +58,14 @@ sed -i "s#^roles_path.*#roles_path = $CEPH_INSTALL_DIR/ceph-deploy/deploy #g" an
 master1
 
 [master]
-# Masters node. ceph-mgr, ceph-mon, ceph-mds is installed on the master node
-# "host_ip" is the public IP address of the host
+# Three ceph components, ceph-mgr, ceph-mon and ceph-mds, are installed on the masters.
+# "host_ip" is the public IP address of the host.
 192.168.10.148 host_name=master1 host_ip=x.x.x.x dashboard_port=8080
 192.168.10.149 host_name=master2 host_ip=x.x.x.x dashboard_port=8080
 192.168.10.151 host_name=master3 host_ip=x.x.x.x dashboard_port=8080
 
 [node]
-# ceph-osd is installed on the node
+# ceph-osd is installed on the nodes.
 192.168.10.152 host_name=node1 
 192.168.10.153 host_name=node2
 192.168.10.155 host_name=node3
@@ -73,11 +73,9 @@ master1
 [add_node]
 192.168.10.156 host_name=node4
 
-# No need to fill anything under [remove_node].
 [remove_node]
 
 [all:vars]
-# There is no need to modify the value from the "master_info" variable to the "all_node" variable
 master_info="{% for h in groups['master'] %}{{h}}  {{hostvars[h]['host_name']}}\n{% endfor %}"
 node_info="{% for h in groups['node'] %}{{h}}  {{hostvars[h]['host_name']}}\n{% endfor %}"
 add_node_info="{% for h in groups['add_node'] %}{{h}}  {{hostvars[h]['host_name']}}\n{% endfor %}"
@@ -105,12 +103,12 @@ workdir="/root/ceph-cluster"
 public_network="192.168.10.0/24"
 cluster_network='172.16.0.0/24'
 
-# Ceph osd replicated size 
+# Number of replicas of an object.
 osd_pool_default_size=2
 
 # Ceph dashboard username and password
-dashboard_username="admin"
-dashboard_password="123456"
+dashboard_username="<user_name>"
+dashboard_password="<password>"
 
 # OSD devices list
 osd_partition_list=['/dev/vdb','/dev/vdc','/dev/vdd']
@@ -137,11 +135,11 @@ add_osd_partition_list=['/dev/vdb','/dev/vdc','/dev/vdd']
 remove_osd_id=11
 ```
 
-5.&nbsp;Ansible-playbook performs installation of Kubernetes.
+5.&nbsp;Setup the ceph cluster by running the ansible playbook install.yaml.
 ```shell
 ansible-playbook install.yaml
 ```
-Or you can do it step by step:
+If you want to setup a specific component, just run its corresponding playbook.
 
 <details>
 <summary>expand</summary>
@@ -170,7 +168,7 @@ ceph osd getcrushmap -o crushmap
 ```shell
 crushtool -d crushmap -o crushmap.txt
 ```
-3.&nbsp;Edit at least one of Devices, Buckets and Rules.
+3.&nbsp;Modify the CRUSH map file content.
 ```shell
 vim crushmap.txt
 ```
