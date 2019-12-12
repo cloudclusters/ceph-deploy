@@ -5,7 +5,7 @@ Ceph-deploy
  [![](https://img.shields.io/badge/docs-latest-brightgreen.svg)](https://img.shields.io/badge/docs-latest-brightgreen.svg)
  [![](https://img.shields.io/badge/license-MIT-green)](https://img.shields.io/badge/license-MIT-green)
  
-<img src="https://www.cloudclusters.io/img/cloudclusters-logo.png" width="100">  
+<img src="images/cloudclusters.png" width="100">  
 
 ----   
 
